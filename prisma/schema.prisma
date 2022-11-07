@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tutor {
+  id            String   @id @default(cuid())
+  nameTutor     String
+  rgId          String
+  cpfId         String
+  ocupation     String
+  phone         String
+  email         String
+  address       Address?
+  pets          Pet[]
+  observations  String
+  fileRg        String?
+  fileResidence String?
+}
+
+model Address {
+  id         String @id @default(cuid())
+  street     String
+  number     String
+  complement String
+  district   String
+  city       String
+  tutor      Tutor  @relation(fields: [tutorId], references: [id])
+  tutorId    String @unique
+}
+
+model Pet {
+  id            String    @id @default(cuid())
+  petType       String
+  age           Int
+  castrated     Boolean
+  wormed        Boolean
+  vac           Boolean
+  vacsName      VacsName?
+  latestVacDate String
+  tutor         Tutor     @relation(fields: [tutorId], references: [id])
+  tutorId       String
+}
+
+model VacsName {
+  id     String  @id @default(cuid())
+  rabica Boolean
+  raiva  Boolean
+  pet    Pet     @relation(fields: [petId], references: [id])
+  petId  String  @unique
+}
